@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {query,validationResult} from "express-validator";
+import {query, validationResult} from "express-validator";
+import {deleteLocalFiles, filterImageFromURL} from "./util/util";
 
 (async () => {
 
@@ -33,14 +34,17 @@ import {query,validationResult} from "express-validator";
     app.get("/filteredImage",
         query('image_url').isURL().withMessage("URL is not valid..."),
         async (req, res) => {
-
+            //check validation
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
-              return res.status(422).json({ errors: errors.array() });
+                return res.status(422).json({errors: errors.array()});
             }
-
+            //get ImageURL from request query param
             const imageURL = req.query.image_url
-            res.status(200).send("TEST " + imageURL)
+            //call filter image from url utility method
+            const filteredImagePath: string = await filterImageFromURL(imageURL)
+            //send file of filtered image
+            res.status(200).sendFile(filteredImagePath)
         });
 
     // Root Endpoint
