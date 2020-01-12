@@ -1,5 +1,6 @@
 import fs from 'fs';
 import Jimp = require('jimp');
+const { query } = require('express-validator/check');
 
 // filterImageFromURL
 // helper function to download, filter, and save the filtered image locally
