@@ -45,6 +45,10 @@ import {deleteLocalFiles, filterImageFromURL} from "./util/util";
             const filteredImagePath: string = await filterImageFromURL(imageURL)
             //send file of filtered image
             res.status(200).sendFile(filteredImagePath)
+            //deletes any files on the server on finish of the response
+            res.on('finish',()=>{
+                deleteLocalFiles([filteredImagePath])
+            })
         });
 
     // Root Endpoint
